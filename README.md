@@ -6,7 +6,17 @@ A browser-based web project that predicts which of eight *SpongeBob SquarePants*
 
 The image classification model was trained using [Google Teachable Machine](https://teachablemachine.withgoogle.com/). The website loads the trained model through its hosted URL and performs the prediction directly in the browser.
 
-This project was developed in 2023 as part of **Facio**, a high school club project completed during the second year of high school. It was created as an introductory application of image classification and browser-based machine learning.
+This project was developed in 2023 as part of **Facio**, a high school club, during second year of high school. It was created as an introductory application of image classification and browser-based machine learning.
+
+The project provided introductory experience in:
+
+* collecting and organizing image data,
+* defining multiclass image categories,
+* training an image classification model,
+* publishing a Teachable Machine model,
+* processing uploaded files with JavaScript,
+* integrating browser-based model inference, and
+* presenting classification results through a web interface.
 
 ## How It Works
 
@@ -27,12 +37,12 @@ The result reflects only the visual patterns learned from the original training 
 | ----------- | --------------------- |
 | `spongebob` | SpongeBob SquarePants |
 | `ddung`     | Patrick Star          |
+| `squid`     | Squidward Tentacles   |
 | `daram`     | Sandy Cheeks          |
 | `plankton`  | Sheldon J. Plankton   |
-| `pingping`  | Gary the Snail        |
-| `squid`     | Squidward Tentacles   |
 | `puff`      | Mrs. Puff             |
 | `Larry`     | Larry the Lobster     |
+| `pingping`  | Gary the Snail        |
 
 The original class labels from the training project have been retained, including the capitalization of `Larry`.
 
@@ -154,20 +164,6 @@ The source code does not intentionally save the uploaded image. Photographs shou
 * An internet connection is required for model inference.
 * The model was not scientifically validated.
 * The project is not a facial-recognition or psychological assessment system.
-
-## Project Background
-
-This project was developed through **Facio**, a high school club, in 2023.
-
-The project provided introductory experience with:
-
-* collecting and organizing image data,
-* defining multiclass image categories,
-* training an image classification model,
-* publishing a Teachable Machine model,
-* processing uploaded files with JavaScript,
-* integrating browser-based model inference, and
-* presenting classification results through a web interface.
 
 ## Disclaimer
 
