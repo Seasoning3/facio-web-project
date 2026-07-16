@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8"/>
+    <title>네모바지 스폰지밥 캐릭터 이미지 예측</title>
+    <link rel="stylesheet" href="style.css"/>
+  </head>
+  <body>
+    <div class="file-upload">
+      <!-- 이미지 업로드 후 예측하기 버튼 -->
+      <button
+        class="file-upload-button"
+        type="button"
+        onclick="predict()"
+      >
+        캐릭터 확인하기
+      </button>
+
+      <!-- 사진을 업로드하는 영역 -->
+      <div class="image-upload-wrap">
+        <input
+          class="file-upload-input"
+          type="file"
+          onchange="readURL(this);"
+          accept="image/*"
+        />
+        <div class="drag-drop-text">
+          <h3>사진을 드래그 앤 드롭하거나 클릭해서 사진을 업로드하세요</h3>
+        </div>
+      </div>
+
+      <div class="file-upload-content">
+        <img
+          class="uploaded-image"
+          id="face-image"
+          alt="업로드된 사진"
+        />
+        <div class="remove-button-wrap">
+          <button
+            type="button"
+            onclick="removeUpload()"
+            class="remove-image"
+          >
+            이미지 제거
+          </button>
+        </div>
+      </div>
+
+      <div class="results">
+        <img
+          class="result-image"
+          id="result-image"
+          src="images/title.png"
+          alt="캐릭터 예측 결과"
+        />
+      </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@1.3.1/dist/tf.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@teachablemachine/image@0.8/dist/teachablemachine-image.min.js"></script>
+    <script>
+      const uploadArea = document.querySelector('.image-upload-wrap');
+      const previewArea = document.querySelector('.file-upload-content');
+      const fileInput = document.querySelector('.file-upload-input');
+      const previewImage = document.getElementById('face-image');
+      const resultImage = document.getElementById('result-image');
+
+      function readURL(input) {
+        if (input.files && input.files[0]) {
+          const reader = new FileReader();
+
+          reader.onload = function (event) {
+            uploadArea.style.display = 'none';
+            previewImage.src = event.target.result;
+            previewArea.style.display = 'block';
+          };
+
+          reader.readAsDataURL(input.files[0]);
+        } else {
+          removeUpload();
+        }
+      }
+
+      function removeUpload() {
+        fileInput.value = '';
+        previewImage.removeAttribute('src');
+        previewArea.style.display = 'none';
+        uploadArea.style.display = 'block';
+        resultImage.src = 'images/title.png';
+      }
+
+      uploadArea.addEventListener('dragover', function () {
+        uploadArea.classList.add('image-dropping');
+      });
+
+      uploadArea.addEventListener('dragleave', function () {
+        uploadArea.classList.remove('image-dropping');
+      });
+
+      // 티처블 머신 모델 로딩
+      const MODEL_BASE_URL = 'https://teachablemachine.withgoogle.com/models/MVRc5pxd6/';
+      let imageModel;
+
+      async function init() {
+        const modelUrl = MODEL_BASE_URL + 'model.json';
+        const metadataUrl = MODEL_BASE_URL + 'metadata.json';
+        imageModel = await tmImage.load(modelUrl, metadataUrl);
+      }
+
+      const characterImagePaths = {
+        spongebob: 'images/spongebob.png',
+        ddung: 'images/ddung.png',
+        daram: 'images/daram.png',
+        plankton: 'images/plankton.png',
+        pingping: 'images/pingping.png',
+        squid: 'images/squid.png',
+        puff: 'images/puff.png',
+        Larry: 'images/larry.png',
+      };
+
+      function findMostLikelyPrediction(predictions) {
+        return predictions.reduce((mostLikely, prediction) =>
+          prediction.probability > mostLikely.probability
+            ? prediction
+            : mostLikely,
+        );
+      }
+
+      async function predict() {
+        if (!previewImage.hasAttribute('src')) {
+          alert('먼저 이미지를 업로드하세요.');
+          return;
+        }
+
+        if (!imageModel) {
+          await init();
+        }
+
+        const predictions = await imageModel.predict(previewImage);
+        const mostLikelyPrediction = findMostLikelyPrediction(predictions);
+        const predictedClass = mostLikelyPrediction.className;
+        const characterImagePath = characterImagePaths[predictedClass];
+        
+        resultImage.src = characterImagePath;
+      }
+    </script>
+  </body>
+</html>
